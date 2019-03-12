@@ -1,4 +1,4 @@
-package com.gnetop.ltgamegoogle;
+package com.gnetop.ltgamegoogle.login;
 
 import android.app.Activity;
 import android.content.Context;
