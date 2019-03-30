@@ -19,9 +19,9 @@ import com.google.android.gms.tasks.Task;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-public class GooglePlayLoginManager {
+public class GoogleLoginManager {
 
-    private static final String TAG = GooglePlayLoginManager.class.getSimpleName();
+    private static final String TAG = GoogleLoginManager.class.getSimpleName();
 
     public static void initGoogle(Activity context, String clientID, int selfRequestCode) {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
