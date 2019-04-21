@@ -26,7 +26,7 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     testImplementation 'junit:junit:4.12'
     implementation 'com.google.android.gms:play-services-auth:16.0.0'
-    implementation 'com.github.muyishuangfeng:LTGameSdkCommon:1.0.8'
+    implementation 'com.github.muyishuangfeng:LTGameSdkCommon:1.0.9'
     // Dependencies for the REST API example
     implementation 'com.google.api-client:google-api-client:1.22.0'
     implementation 'com.google.api-client:google-api-client-android:1.22.0'
