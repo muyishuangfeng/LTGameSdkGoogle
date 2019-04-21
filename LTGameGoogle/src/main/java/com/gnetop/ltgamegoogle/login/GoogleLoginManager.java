@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.gnetop.ltgamecommon.impl.OnLoginSuccessListener;
 import com.gnetop.ltgamecommon.login.LoginBackManager;
+import com.gnetop.ltgamecommon.util.DeviceIDUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -52,8 +54,15 @@ public class GoogleLoginManager {
             String idToken = account.getIdToken();
             Log.e(TAG, idToken);
             Map<String, Object> map = new WeakHashMap<>();
-            map.put("access_token", idToken);
-            map.put("platform", 2);
+            if (TextUtils.isEmpty(DeviceIDUtil.getUniqueId(context))){
+                map.put("access_token", idToken);
+                map.put("platform", 2);
+                map.put("adid", "");
+            }else {
+                map.put("access_token", idToken);
+                map.put("platform", 2);
+                map.put("adid", DeviceIDUtil.getUniqueId(context));
+            }
             LoginBackManager.googleLogin(context, LTAppID,
                     LTAppKey, map, mListener);
         } catch (ApiException e) {
