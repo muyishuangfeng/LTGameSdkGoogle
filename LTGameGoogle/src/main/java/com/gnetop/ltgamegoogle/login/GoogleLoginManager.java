@@ -7,9 +7,11 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.gnetop.ltgamecommon.base.Constants;
 import com.gnetop.ltgamecommon.impl.OnLoginSuccessListener;
 import com.gnetop.ltgamecommon.login.LoginBackManager;
 import com.gnetop.ltgamecommon.util.DeviceIDUtil;
+import com.gnetop.ltgamecommon.util.PreferencesUtils;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -33,6 +35,7 @@ public class GoogleLoginManager {
         GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(context, gso);
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         context.startActivityForResult(signInIntent, selfRequestCode);
+        LoginBackManager.getUUID(context);
     }
 
 
@@ -54,14 +57,17 @@ public class GoogleLoginManager {
             String idToken = account.getIdToken();
             Log.e(TAG, idToken);
             Map<String, Object> map = new WeakHashMap<>();
-            if (TextUtils.isEmpty(DeviceIDUtil.getUniqueId(context))){
+            if (TextUtils.isEmpty(DeviceIDUtil.getUniqueId(context)) && TextUtils.isEmpty(
+                    PreferencesUtils.getString(context, Constants.USER_UUID))) {
                 map.put("access_token", idToken);
                 map.put("platform", 2);
                 map.put("adid", "");
-            }else {
+                map.put("gps_adid", "");
+            } else {
                 map.put("access_token", idToken);
                 map.put("platform", 2);
                 map.put("adid", DeviceIDUtil.getUniqueId(context));
+                map.put("gps_adid", PreferencesUtils.getString(context, Constants.USER_UUID));
             }
             LoginBackManager.googleLogin(context, LTAppID,
                     LTAppKey, map, mListener);
