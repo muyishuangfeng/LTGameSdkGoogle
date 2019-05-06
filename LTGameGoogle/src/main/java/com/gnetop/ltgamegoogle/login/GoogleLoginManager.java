@@ -41,33 +41,34 @@ public class GoogleLoginManager {
 
     public static void onActivityResult(int requestCode, Intent data, int selfRequestCode,
                                         Context context, String LTAppID,
-                                        String LTAppKey, OnLoginSuccessListener mListener) {
+                                        String LTAppKey, String adID, OnLoginSuccessListener mListener) {
         if (requestCode == selfRequestCode) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(context, LTAppID, LTAppKey, task, mListener);
+            if (!TextUtils.isEmpty(adID)) {
+                handleSignInResult(context, LTAppID, LTAppKey, adID, task, mListener);
+            }
         }
     }
 
 
     private static void handleSignInResult(Context context, String LTAppID,
-                                           String LTAppKey, @NonNull Task<GoogleSignInAccount> completedTask,
+                                           String LTAppKey, String adID, @NonNull Task<GoogleSignInAccount> completedTask,
                                            OnLoginSuccessListener mListener) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             String idToken = account.getIdToken();
             Log.e(TAG, idToken);
             Map<String, Object> map = new WeakHashMap<>();
-            if (TextUtils.isEmpty(DeviceIDUtil.getUniqueId(context)) && TextUtils.isEmpty(
-                    PreferencesUtils.getString(context, Constants.USER_UUID))) {
-                map.put("access_token", idToken);
-                map.put("platform", 2);
-                map.put("adid", "");
-                map.put("gps_adid", "");
-            } else {
+            if (!TextUtils.isEmpty(DeviceIDUtil.getUniqueId(context))) {
                 map.put("access_token", idToken);
                 map.put("platform", 2);
                 map.put("adid", DeviceIDUtil.getUniqueId(context));
-                map.put("gps_adid", PreferencesUtils.getString(context, Constants.USER_UUID));
+                map.put("gps_adid", adID);
+            } else {
+                map.put("access_token", idToken);
+                map.put("platform", 2);
+                map.put("adid", "");
+                map.put("gps_adid", adID);
             }
             LoginBackManager.googleLogin(context, LTAppID,
                     LTAppKey, map, mListener);
