@@ -40,19 +40,21 @@ public class GoogleLoginManager {
 
 
     public static void onActivityResult(int requestCode, Intent data, int selfRequestCode,
-                                        Context context, String LTAppID,
-                                        String LTAppKey, String adID, OnLoginSuccessListener mListener) {
+                                        Context context, String LTAppID, String LTAppKey, String adID,
+                                        String packageID,
+                                        OnLoginSuccessListener mListener) {
         if (requestCode == selfRequestCode) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             if (!TextUtils.isEmpty(adID)) {
-                handleSignInResult(context, LTAppID, LTAppKey, adID, task, mListener);
+                handleSignInResult(context, LTAppID, LTAppKey, adID, packageID,task, mListener);
             }
         }
     }
 
 
     private static void handleSignInResult(Context context, String LTAppID,
-                                           String LTAppKey, String adID, @NonNull Task<GoogleSignInAccount> completedTask,
+                                           String LTAppKey, String adID, String packageID,
+                                           @NonNull Task<GoogleSignInAccount> completedTask,
                                            OnLoginSuccessListener mListener) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
@@ -64,11 +66,13 @@ public class GoogleLoginManager {
                 map.put("platform", 2);
                 map.put("adid", DeviceIDUtil.getUniqueId(context));
                 map.put("gps_adid", adID);
+                map.put("platform_id", packageID);
             } else {
                 map.put("access_token", idToken);
                 map.put("platform", 2);
                 map.put("adid", "");
                 map.put("gps_adid", adID);
+                map.put("platform_id", packageID);
             }
             LoginBackManager.googleLogin(context, LTAppID,
                     LTAppKey, map, mListener);
