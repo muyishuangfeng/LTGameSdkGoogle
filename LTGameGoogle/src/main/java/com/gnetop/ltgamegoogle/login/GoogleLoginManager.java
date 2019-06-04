@@ -61,16 +61,10 @@ public class GoogleLoginManager {
             String idToken = account.getIdToken();
             Log.e(TAG, idToken);
             Map<String, Object> map = new WeakHashMap<>();
-            if (!TextUtils.isEmpty(DeviceIDUtil.getUniqueId(context))) {
+            if (!TextUtils.isEmpty(adID)) {
                 map.put("access_token", idToken);
                 map.put("platform", 2);
                 map.put("adid", DeviceIDUtil.getUniqueId(context));
-                map.put("gps_adid", adID);
-                map.put("platform_id", packageID);
-            } else {
-                map.put("access_token", idToken);
-                map.put("platform", 2);
-                map.put("adid", "");
                 map.put("gps_adid", adID);
                 map.put("platform_id", packageID);
             }
